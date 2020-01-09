@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def align_traces(time, trace, trials, *, window_left, window_right):
@@ -14,3 +15,20 @@ def align_traces(time, trace, trials, *, window_left, window_right):
         idx_end = timepoint_idx + window_right_idx
         output[trial_num] = trace[idx_start:idx_end]
     return output
+
+
+def plot_heatmap(traces, *, window_left, dt, aspect=2, ax=None):
+    if ax is None:
+        fig, ax = plt.subplots()
+    top, bottom = -0.5, traces.shape[0] - 0.5
+    left, right = -window_left, traces.shape[1] * dt - window_left
+    ax.imshow(
+        traces,
+        extent=(left, right, bottom, top),
+        aspect=aspect,
+    )
+    ax.set_yticks(list(range(traces.shape[0])))
+    ax.set_ylabel('trial num')
+    ax.set_xlabel('time (s)')
+    ax.axvline(0, color='red')
+    return ax
